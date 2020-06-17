@@ -11,6 +11,10 @@ namespace imu_bno055 {
 
 // ******** constructors ******** //
 
+#define IMU_ORIENTATION_COV 0.05
+#define IMU_ANG_VEL_COV 0.1
+#define IMU_LIN_ACCEL_COV 0.5
+
 BNO055I2CActivity::BNO055I2CActivity(ros::NodeHandle &_nh, ros::NodeHandle &_nh_priv) :
   nh(_nh), nh_priv(_nh_priv) {
     ROS_INFO("initializing");
@@ -198,6 +202,18 @@ bool BNO055I2CActivity::spinOnce() {
     msg_data.angular_velocity.x = (double)record.raw_angular_velocity_x / 900.0;
     msg_data.angular_velocity.y = (double)record.raw_angular_velocity_y / 900.0;
     msg_data.angular_velocity.z = (double)record.raw_angular_velocity_z / 900.0;
+
+    msg_data.orientation_covariance[0] = IMU_ORIENTATION_COV;
+    msg_data.orientation_covariance[4] = IMU_ORIENTATION_COV;
+    msg_data.orientation_covariance[8] = IMU_ORIENTATION_COV;
+
+    msg_data.angular_velocity_covariance[0] = IMU_ANG_VEL_COV;
+    msg_data.angular_velocity_covariance[4] = IMU_ANG_VEL_COV;
+    msg_data.angular_velocity_covariance[8] = IMU_ANG_VEL_COV;
+
+    msg_data.linear_acceleration_covariance[0] = IMU_LIN_ACCEL_COV;
+    msg_data.linear_acceleration_covariance[4] = IMU_LIN_ACCEL_COV;
+    msg_data.linear_acceleration_covariance[8] = IMU_LIN_ACCEL_COV;
 
     sensor_msgs::Temperature msg_temp;
     msg_temp.header.stamp = time;
